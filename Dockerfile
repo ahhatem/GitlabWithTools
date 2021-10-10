@@ -16,7 +16,7 @@ RUN echo -e '#!/bin/bash\n\
     --executor shell \
     --description "My Runner"\n\
     \n\
-    gitlab-runner start;\
+    gitlab-runner run;\
     ' > /src/entrypoint.sh
 RUN chmod 700 entrypoint.sh
 CMD [ "/src/entrypoint.sh" ]

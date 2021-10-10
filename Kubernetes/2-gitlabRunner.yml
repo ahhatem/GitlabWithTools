@@ -1,27 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gitlabRunner
+  name: gitlabrunner
   labels:
-    app: gitlabRunner
+    app: gitlabrunner
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gitlabRunner
+      app: gitlabrunner
   template:
     metadata:
       labels:
-        app: gitlabRunner
+        app: gitlabrunner
     spec:
       containers:
-      - name: gitlabRunner
-        image: ahhatem/gitlabRunner
+      - name: gitlabrunner
+        image: ahhatem/gitlabrunner:latest
+        imagePullPolicy: Never
         ports:
             - containerPort: 22 
         env:
             - name: gitlabToken
-              value: "5000"
+              value: "$gitlabToken"
             - name: gitlabURL
               value: http://gitlab-lb:80
 
@@ -30,14 +31,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: gitlabRunner-service
+  name: gitlabrunner-service
   labels:
-    app: gitlabRunner
+    app: gitlabrunner
 spec:
   ports:
   - name: tcp
     port: 22
     protocol: TCP
   selector:
-    app: gitlabRunner
+    app: gitlabrunner
   type: NodePort
