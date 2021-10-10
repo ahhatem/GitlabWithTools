@@ -1,0 +1,40 @@
+version: '3.5'
+services:
+  gitlab:
+    image: gitlab/gitlab-ee:latest
+    restart: unless-stopped
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        gitlab_rails['gitlab_shell_ssh_port'] = 8822
+    ports:
+      - "8000:80"
+      - "8822:22"
+    networks:
+      - gitlab
+
+  gitlab-runner:
+    image: gitlab/gitlab-runner:alpine
+    restart: unless-stopped
+    depends_on:
+      - gitlab
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - gitlab
+
+networks:
+  gitlab:
+
+## Run the following to register the runner... 
+#
+# gitlab-runner register -n \
+# --url http://ahhatem_gitlab_1 \
+# --registration-token <get token from portal> \
+# --executor shell \
+# --description "My shell Runner" 
+#
+# apk add docker shadow
+#
+# usermod -aG docker gitlab-runner
+#       > this didn't work. I had to change user "gitlab-runner" to ID 0 and be root.
+

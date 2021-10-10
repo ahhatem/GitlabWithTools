@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: gitlab
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            component: gitlab
+    template:
+        metadata:
+            labels:
+                component: gitlab
+        spec:
+            containers:
+                - name: gitlab
+                  image: gitlab/gitlab-ee:latest
+                  ports:
+                      - containerPort: 80
+                      - containerPort: 22 
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: gitlab-lb
+spec:
+    selector:
+        component: gitlab
+    type: LoadBalancer
+    ports:
+        - port: 80
+          targetPort: 80
+        - port: 22
+          targetPort: 22
